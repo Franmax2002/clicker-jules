@@ -128,6 +128,94 @@
     .btn-reset:active {
       transform: translateY(0);
     }
+
+    /* Achievements / Logros Styling */
+    .achievements-section {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .achievements-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .achievements-grid {
+      display: flex;
+      justify-content: space-around;
+      gap: 0.5rem;
+    }
+
+    .achievement-card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 0.6rem 0.4rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+      opacity: 0.4;
+      filter: grayscale(100%);
+    }
+
+    .achievement-card.unlocked {
+      opacity: 1;
+      filter: grayscale(0%);
+      background: rgba(255, 215, 0, 0.15);
+      border-color: rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    .trophy-icon {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 0.3rem;
+    }
+
+    .achievement-name {
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-bottom: 0.1rem;
+    }
+
+    .achievement-req {
+      font-size: 0.65rem;
+      opacity: 0.8;
+    }
+
+    /* Achievement toast / popup notification */
+    .toast-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(20, 20, 30, 0.95);
+      border: 2px solid #ffd700;
+      color: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transform: translateX(150%);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+    }
+
+    .toast-notification.show {
+      transform: translateX(0);
+    }
+
+    .toast-icon {
+      width: 40px;
+      height: 40px;
+    }
   </style>
 </head>
 <body>
@@ -171,21 +259,126 @@
     <div>
       <button class="btn-reset" id="reset-btn">Reset Counter</button>
     </div>
+
+    <!-- Achievements / Logros Section -->
+    <div class="achievements-section" id="achievements-section">
+      <div class="achievements-title">Logros 🏆</div>
+      <div class="achievements-grid">
+
+        <!-- 10 Clicks Achievement -->
+        <div class="achievement-card" id="achievement-10" data-clicks="10" aria-label="Logro 10 Clicks">
+          <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9C6 9 3 9 3 6C3 3 6 3 6 3H18C18 3 21 3 21 6C21 9 18 9 18 9" stroke="#cd7f32" fill="#cd7f32" fill-opacity="0.3"/>
+            <path d="M6 3H18V10C18 13.3137 15.3137 16 12 16C8.68629 16 6 13.3137 6 10V3Z" stroke="#cd7f32" fill="#cd7f32"/>
+            <path d="M12 16V20" stroke="#cd7f32"/>
+            <path d="M8 21H16" stroke="#cd7f32"/>
+          </svg>
+          <div class="achievement-name">Novato</div>
+          <div class="achievement-req">10 clics</div>
+        </div>
+
+        <!-- 100 Clicks Achievement -->
+        <div class="achievement-card" id="achievement-100" data-clicks="100" aria-label="Logro 100 Clicks">
+          <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9C6 9 3 9 3 6C3 3 6 3 6 3H18C18 3 21 3 21 6C21 9 18 9 18 9" stroke="#c0c0c0" fill="#c0c0c0" fill-opacity="0.3"/>
+            <path d="M6 3H18V10C18 13.3137 15.3137 16 12 16C8.68629 16 6 13.3137 6 10V3Z" stroke="#c0c0c0" fill="#c0c0c0"/>
+            <path d="M12 16V20" stroke="#c0c0c0"/>
+            <path d="M8 21H16" stroke="#c0c0c0"/>
+          </svg>
+          <div class="achievement-name">Experto</div>
+          <div class="achievement-req">100 clics</div>
+        </div>
+
+        <!-- 1000 Clicks Achievement -->
+        <div class="achievement-card" id="achievement-1000" data-clicks="1000" aria-label="Logro 1000 Clicks">
+          <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9C6 9 3 9 3 6C3 3 6 3 6 3H18C18 3 21 3 21 6C21 9 18 9 18 9" stroke="#ffd700" fill="#ffd700" fill-opacity="0.3"/>
+            <path d="M6 3H18V10C18 13.3137 15.3137 16 12 16C8.68629 16 6 13.3137 6 10V3Z" stroke="#ffd700" fill="#ffd700"/>
+            <path d="M12 16V20" stroke="#ffd700"/>
+            <path d="M8 21H16" stroke="#ffd700"/>
+          </svg>
+          <div class="achievement-name">Maestro</div>
+          <div class="achievement-req">1000 clics</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification element for newly unlocked achievement -->
+  <div class="toast-notification" id="achievement-toast" role="status" aria-live="polite">
+    <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2">
+      <path d="M6 3H18V10C18 13.3137 15.3137 16 12 16C8.68629 16 6 13.3137 6 10V3Z" fill="#ffd700"/>
+      <path d="M12 16V20"/>
+      <path d="M8 21H16"/>
+    </svg>
+    <div>
+      <div style="font-weight: bold; font-size: 0.9rem; color: #ffd700;">¡Logro Desbloqueado!</div>
+      <div id="toast-title" style="font-size: 0.8rem;"></div>
+    </div>
   </div>
 
   <script>
     const cookieBtn = document.getElementById('cookie-btn');
     const cookieCountDisplay = document.getElementById('cookie-count');
     const resetBtn = document.getElementById('reset-btn');
+    const toast = document.getElementById('achievement-toast');
+    const toastTitle = document.getElementById('toast-title');
 
-    // Load saved count from localStorage or default to 0
+    const achievements = [
+      { id: '10', threshold: 10, title: 'Novato (10 clics)' },
+      { id: '100', threshold: 100, title: 'Experto (100 clics)' },
+      { id: '1000', threshold: 1000, title: 'Maestro (1000 clics)' }
+    ];
+
+    // Load saved count and unlocked achievements from localStorage
     let count = parseInt(localStorage.getItem('cookieClickCount')) || 0;
+    let unlockedAchievements = JSON.parse(localStorage.getItem('cookieAchievements')) || {};
+
     cookieCountDisplay.textContent = count;
+
+    let toastTimeout = null;
+
+    function showToast(title) {
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTitle.textContent = title;
+      toast.classList.add('show');
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function checkAchievements(currentCount, triggerToast = true) {
+      achievements.forEach(ach => {
+        const card = document.getElementById(`achievement-${ach.id}`);
+        if (currentCount >= ach.threshold) {
+          if (!unlockedAchievements[ach.id]) {
+            unlockedAchievements[ach.id] = true;
+            localStorage.setItem('cookieAchievements', JSON.stringify(unlockedAchievements));
+            if (triggerToast) {
+              showToast(ach.title);
+            }
+          }
+          if (card) {
+            card.classList.add('unlocked');
+          }
+        } else {
+          if (card) {
+            card.classList.remove('unlocked');
+          }
+        }
+      });
+    }
+
+    // Initialize achievements UI on page load
+    checkAchievements(count, false);
 
     function incrementCounter(event) {
       count++;
       cookieCountDisplay.textContent = count;
       localStorage.setItem('cookieClickCount', count);
+
+      checkAchievements(count, true);
 
       // Create floating +1 text
       createFloatingText(event);
@@ -229,8 +422,14 @@
 
     resetBtn.addEventListener('click', () => {
       count = 0;
+      unlockedAchievements = {};
       cookieCountDisplay.textContent = count;
       localStorage.setItem('cookieClickCount', count);
+      localStorage.setItem('cookieAchievements', JSON.stringify(unlockedAchievements));
+      checkAchievements(count, false);
+      if (toast) {
+        toast.classList.remove('show');
+      }
     });
   </script>
 </body>
