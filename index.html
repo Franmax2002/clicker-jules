@@ -319,6 +319,29 @@
   </div>
 
   <script>
+    // Prevent right-click context menu
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+
+    // Block common DevTools keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // F12
+      if (e.key === 'F12') {
+        e.preventDefault();
+        return;
+      }
+      // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U (and Mac equivalents with Meta)
+      const isCmdOrCtrl = e.ctrlKey || e.metaKey;
+      if (
+        (isCmdOrCtrl && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+        (isCmdOrCtrl && (e.key === 'U' || e.key === 'u'))
+      ) {
+        e.preventDefault();
+        return;
+      }
+    });
+
     const cookieBtn = document.getElementById('cookie-btn');
     const cookieCountDisplay = document.getElementById('cookie-count');
     const resetBtn = document.getElementById('reset-btn');
@@ -331,11 +354,61 @@
       { id: '1000', threshold: 1000, title: 'Maestro (1000 clics)' }
     ];
 
-    // Load saved count and unlocked achievements from localStorage
-    let count = parseInt(localStorage.getItem('cookieClickCount')) || 0;
-    let unlockedAchievements = JSON.parse(localStorage.getItem('cookieAchievements')) || {};
+    const SECRET_SALT = 'CookieClicker_SecureSalt_987654321';
 
+    function computeHash(value) {
+      let str = value + SECRET_SALT;
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0; // Convert to 32bit integer
+      }
+      return hash.toString(16);
+    }
+
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    }
+
+    function setCookie(name, value) {
+      document.cookie = `${name}=${value}; path=/; SameSite=Strict`;
+    }
+
+    function loadSavedCount() {
+      const savedCountStr = localStorage.getItem('cookieClickCount') || getCookie('cookieClickCount');
+      const savedHash = localStorage.getItem('cookieClickHash') || getCookie('cookieClickHash');
+
+      if (!savedCountStr) return 0;
+
+      const parsedCount = parseInt(savedCountStr, 10);
+      if (isNaN(parsedCount) || parsedCount < 0) {
+        return 0;
+      }
+
+      // Check integrity hash
+      if (savedHash !== computeHash(parsedCount)) {
+        console.warn('Tampering detected in saved state. Counter has been reset.');
+        return 0;
+      }
+
+      return parsedCount;
+    }
+
+    function saveCount(val) {
+      const hash = computeHash(val);
+      localStorage.setItem('cookieClickCount', val);
+      localStorage.setItem('cookieClickHash', hash);
+      setCookie('cookieClickCount', val);
+      setCookie('cookieClickHash', hash);
+    }
+
+    // Load saved count from localStorage or cookies with integrity check
+    let count = loadSavedCount();
+    let unlockedAchievements = JSON.parse(localStorage.getItem('cookieAchievements')) || {};
     cookieCountDisplay.textContent = count;
+    saveCount(count);
 
     let toastTimeout = null;
 
@@ -376,7 +449,7 @@
     function incrementCounter(event) {
       count++;
       cookieCountDisplay.textContent = count;
-      localStorage.setItem('cookieClickCount', count);
+      saveCount(count);
 
       checkAchievements(count, true);
 
@@ -424,7 +497,7 @@
       count = 0;
       unlockedAchievements = {};
       cookieCountDisplay.textContent = count;
-      localStorage.setItem('cookieClickCount', count);
+      saveCount(count);
       localStorage.setItem('cookieAchievements', JSON.stringify(unlockedAchievements));
       checkAchievements(count, false);
       if (toast) {
