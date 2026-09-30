@@ -1,0 +1,10 @@
+--- Starting verification tests ---
+✓ initial UI state is correct
+✓ clicking cookie increments counter and creates floating text
+✓ keyboard interactions (Enter and Space) increment counter
+✓ unlocks 10 clics trophy and shows toast
+✓ unlocks 100 clics trophy and 1000 clics trophy
+✓ state persists in localStorage on page reload
+✓ reset button resets count and achievements
+
+Test Summary: 7 passed, 0 failed
