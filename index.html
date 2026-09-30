@@ -173,65 +173,6 @@
     </div>
   </div>
 
-  <script>
-    const cookieBtn = document.getElementById('cookie-btn');
-    const cookieCountDisplay = document.getElementById('cookie-count');
-    const resetBtn = document.getElementById('reset-btn');
-
-    // Load saved count from localStorage or default to 0
-    let count = parseInt(localStorage.getItem('cookieClickCount')) || 0;
-    cookieCountDisplay.textContent = count;
-
-    function incrementCounter(event) {
-      count++;
-      cookieCountDisplay.textContent = count;
-      localStorage.setItem('cookieClickCount', count);
-
-      // Create floating +1 text
-      createFloatingText(event);
-    }
-
-    function createFloatingText(event) {
-      const floatText = document.createElement('div');
-      floatText.className = 'floating-text';
-      floatText.textContent = '+1';
-
-      const rect = cookieBtn.getBoundingClientRect();
-      let x, y;
-
-      if (event && event.clientX && event.clientY) {
-        x = event.clientX - rect.left - 10;
-        y = event.clientY - rect.top - 20;
-      } else {
-        // Fallback for keyboard press
-        x = rect.width / 2 - 10;
-        y = rect.height / 2 - 20;
-      }
-
-      floatText.style.left = `${x}px`;
-      floatText.style.top = `${y}px`;
-
-      cookieBtn.appendChild(floatText);
-
-      setTimeout(() => {
-        floatText.remove();
-      }, 800);
-    }
-
-    cookieBtn.addEventListener('click', incrementCounter);
-
-    cookieBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        incrementCounter(e);
-      }
-    });
-
-    resetBtn.addEventListener('click', () => {
-      count = 0;
-      cookieCountDisplay.textContent = count;
-      localStorage.setItem('cookieClickCount', count);
-    });
-  </script>
+  <script src="script.js" defer></script>
 </body>
 </html>
